@@ -1,27 +1,36 @@
+from sqlite3 import Cursor
+
+
 CUSTOMERS = [
     {
         "id": 1,
         "name": "Anais McKenzie",
+        "status": "adopter"
     },
      {
         "id": 2,
         "name": "Leon Cartwright",
+        "status": "adopter"
     },
       {
         "id": 3,
         "name": "Renee Koss Sr.",
+        "status": "foster"
     },
        {
         "id": 4,
         "name": "Lynne Zboncak",
+        "status": "foster"
     },
         {
         "id": 5,
         "name": "Bobby Grant",
+        "status": "volunteer"
     },
          {
         "id": 6,
         "name": "Essie Koch",
+        "status": "volunteer"
     }
 ]
 
@@ -57,3 +66,9 @@ def delete_customer(id):
         
         if customer_index >= 0:
             CUSTOMERS.pop(customer_index)
+            
+def update_customer(id, new_customer):
+    for index, customer in enumerate(CUSTOMERS):
+        if customer["id"] == id:
+            CUSTOMERS[index] = new_customer
+            break
