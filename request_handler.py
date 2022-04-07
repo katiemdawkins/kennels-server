@@ -1,7 +1,9 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
-from views import get_all_animals, get_single_animal, get_all_locations, get_single_location, get_all_employees, get_single_employee, get_all_customers, get_single_customer, create_animal, create_location
+from views import get_all_animals, get_single_animal, get_all_locations, get_single_location, get_all_employees, get_single_employee, get_all_customers, get_single_customer, create_animal, create_location, delete_animal, delete_location, delete_employee, delete_customer
 from views.employee_requests import create_employee
+from views.customer_requests import create_customer
+
 
 
 
@@ -134,6 +136,39 @@ class HandleRequests(BaseHTTPRequestHandler):
             new_employee = create_employee(post_body)
             self.wfile.write(f"{new_employee}".encode())
 
+        new_customer = None
+        if resource == "customers":
+            new_customer = create_customer(post_body)
+            self.wfile.write(f"{new_customer}".encode())
+    
+    def do_DELETE(self):
+        # Set a 204 response code
+        self._set_headers(204)
+
+        # Parse the URL
+        (resource, id) = self.parse_url(self.path)
+
+        # Delete a single animal from the list
+        if resource == "animals":
+            delete_animal(id)
+            # Encode the new animal and send in response
+            self.wfile.write("".encode())
+            
+        if resource == "locations":
+            delete_location(id)
+            self.wfile.write("".encode())
+            
+        if resource == "employees":
+            delete_employee(id)
+            self.wfile.write("".encode())
+            
+        if resource == "customers":
+            delete_customer(id)
+            self.wfile.write("".encode())
+            
+        
+        
+                
     def do_PUT(self):
         """Handles PUT requests to the server
         """
