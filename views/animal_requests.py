@@ -225,3 +225,31 @@ def delete_animal(id):
         DELETE FROM animal
         WHERE id = ?
         """, (id, ))
+
+def update_animal(id, new_animal):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        UPDATE Animal
+            SET
+                name = ?,
+                status = ?,
+                breed = ?,
+                customer_id = ?,
+                location_id = ?
+        WHERE id = ?
+        """, (new_animal['name'], new_animal['status'], new_animal['breed'],
+               new_animal['customerId'], new_animal['locationId'],
+               id, ))
+
+        # Were any rows affected?
+        # Did the client send an `id` that exists?
+        rows_affected = db_cursor.rowcount
+
+    if rows_affected == 0:
+        # Forces 404 response by main module
+        return False
+    else:
+        # Forces 204 response by main module
+        return True
