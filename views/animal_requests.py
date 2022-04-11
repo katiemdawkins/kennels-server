@@ -2,9 +2,10 @@ import sqlite3
 import json
 from models import Animal
 
-#ANIMALS is a python dictionary. Dictionaries store data in key value pairs, ordered, changeable, does not allow duplicates
+#ANIMALS is a python list. 
 ANIMALS = [
     {
+        #dictionaries within a list. Dictionaries store data in key value pairs, ordered, changeable, does not allow duplicates
         "id": 1,
         "name": "Snickers",
         "species": "Dog",
@@ -51,7 +52,7 @@ def get_single_animal(id):
 
 #this will go in the post function in request_handler
 def create_animal(animal):
-    # Get the id value of the last animal in the list
+    # Get the id value of the last animal in the list negative 1 gives you the last thing in the list 
     max_id = ANIMALS[-1]["id"]
 
     # Add 1 to whatever that number is
@@ -162,3 +163,65 @@ def get_single_animal(id):
                             data['customer_id'])
 
         return json.dumps(animal.__dict__)
+    
+def get_animals_by_location_id(location_id):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        
+        db_cursor.execute("""
+        select
+            c.id,
+            c.name,
+            c.status,
+            c.breed,
+            c.customer_id,
+            c.location_id
+        from Animal c
+        WHERE c.location_id = ?
+        """, ( location_id, ))
+
+        animals = []
+        dataset = db_cursor.fetchall()
+        
+        for row in dataset:
+            animal = Animal(row['id'], row['name'], row['status'], row['breed'] , row['customer_id'], row['location_id'])
+            animals.append(animal.__dict__)
+
+    return json.dumps(animals)
+
+def get_animals_by_status(status):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        conn.row_factory = sqlite3.Row
+        db_cursor = conn.cursor()
+        
+        db_cursor.execute("""
+        select
+            c.id,
+            c.name,
+            c.status,
+            c.breed,
+            c.customer_id,
+            c.location_id
+        from Animal c
+        WHERE c.status = ?
+        """, ( status, ))
+
+        animals = []
+        dataset = db_cursor.fetchall()
+        
+        for row in dataset:
+            animal = Animal(row['id'], row['name'], row['status'], row['breed'] , row['customer_id'], row['location_id'])
+            #turning the object into a dictionary
+            animals.append(animal.__dict__)
+
+    return json.dumps(animals)
+
+def delete_animal(id):
+    with sqlite3.connect("./kennel.sqlite3") as conn:
+        db_cursor = conn.cursor()
+
+        db_cursor.execute("""
+        DELETE FROM animal
+        WHERE id = ?
+        """, (id, ))

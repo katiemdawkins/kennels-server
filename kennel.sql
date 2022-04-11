@@ -66,7 +66,7 @@ SELECT
     a.location_id,
     a.customer_id
 FROM animal a
-WHERE a.id = 4
+
 
 SELECT
     a.id,
@@ -91,3 +91,40 @@ SELECT
 	a.location_id
 FROM employee a
 WHERE a.id = 2
+
+SELECT
+	c.id,
+	c.name,
+	c.address
+FROM customer c
+WHERE c.email= "mo@silvera.com"
+
+SELECT
+	c.id,
+	c.name,
+	c.status,
+	c.breed,
+	c.customer_id,
+	c.location_id
+FROM animal c
+WHERE c.location_id = 1
+
+SELECT
+	c.id,
+	c.name,
+	c.status,
+	c.breed,
+	c.customer_id,
+	c.location_id
+FROM animal c
+WHERE c.status = "Treatment"
+
+SELECT
+	c.id,
+	c.name,
+	c.address,
+	c.location_id
+FROM employee c
+WHERE c.location_id = 2
+
+INSERT INTO `Animal` VALUES (null, "Daps", "Kennel", "Boxer", 2, 2);
